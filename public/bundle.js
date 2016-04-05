@@ -65389,6 +65389,7 @@ module.exports = angular;
 },{"./angular":10}],12:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('LoginController', require('./login-controller.js'));
+
 },{"./login-controller.js":13,"angular":11}],13:[function(require,module,exports){
 function LoginController(sessionFactory) {
     var lc = this;
@@ -65406,6 +65407,7 @@ function LoginController(sessionFactory) {
 }
 
 module.exports = LoginController;
+
 },{}],14:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [
@@ -65432,10 +65434,12 @@ require('../shared');
 
 // login-page
 require('../components/login-page');
+
 },{"../components/login-page":12,"../shared":15,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],15:[function(require,module,exports){
 require('angular').module('crossover')
     .value('sessionAPI', '/myapplication/getsession')
     .factory('sessionFactory', require('./session-factory.js'));
+
 },{"./session-factory.js":16,"angular":11}],16:[function(require,module,exports){
 function sessionFactory($http, sessionAPI) {
 
@@ -65467,4 +65471,5 @@ function sessionFactory($http, sessionAPI) {
 }
 
 module.exports = sessionFactory;
+
 },{}]},{},[14]);
