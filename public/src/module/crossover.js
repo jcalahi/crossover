@@ -1,0 +1,25 @@
+'use strict'; // jshint ignore:line
+require('angular').module('crossover', [
+    require('angular-ui-router'),
+    require('angular-animate'),
+    require('angular-aria'),
+    require('angular-messages'),
+    require('angular-material')
+]).config(config);
+
+function config($stateProvider, $urlRouterProvider, $locationProvider) {
+    $stateProvider.state('login', {
+        url: '/',
+        controller: 'LoginController',
+        controllerAs: 'loginCtrl',
+        templateUrl: 'src/components/login-page/login.html'
+    });
+
+    $locationProvider.html5Mode(true);
+}
+
+// shared
+require('../shared');
+
+// login-page
+require('../components/login-page');
