@@ -6,7 +6,7 @@
                 <label>Username</label>
                 <input required name="userName" ng-model="sessionCtrl.userName">
             </md-input-container>
-            <md-button class="md-raised md-primary" ng-click="sessionCtrl.loginBtn(sessionCtrl.userName)">Enter</md-button>
+            <md-button class="md-raised md-primary" ng-click="sessionCtrl.loginBtn(sessionCtrl.userName)" ng-disabled="sessionCtrl.userName.length <= 3">Enter</md-button>
         </form>
     </md-content>
 </div>
