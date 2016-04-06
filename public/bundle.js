@@ -65392,6 +65392,7 @@ function AuctionController() {
 }
 
 module.exports = AuctionController;
+
 },{}],13:[function(require,module,exports){
 function auctionWidget() {
     return {
@@ -65401,16 +65402,19 @@ function auctionWidget() {
 }
 
 module.exports = auctionWidget;
+
 },{}],14:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('AuctionController', require('./auction-controller.js'))
     .directive('auctionWidget', require('./auction-directive.js'));
+
 },{"./auction-controller.js":12,"./auction-directive.js":13,"angular":11}],15:[function(require,module,exports){
 function DashboardController(sessionFactory) {
 
 }
 
 module.exports = DashboardController;
+
 },{}],16:[function(require,module,exports){
 require('angular').module('crossover')
 	.controller('DashboardController', require('./dashboard-controller.js'))
@@ -65419,6 +65423,7 @@ require('angular').module('crossover')
 require('./player-widget');
 require('./inventory-widget');
 require('./auction-widget');
+
 },{"./auction-widget":14,"./dashboard-controller.js":15,"./inventory-widget":17,"./player-widget":20,"./player-widget/player-controller.js":21,"angular":11}],17:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('InventoryController', require('./inventory-controller.js'))
@@ -65430,6 +65435,7 @@ function InventoryController() {
 }
 
 module.exports = InventoryController;
+
 },{}],19:[function(require,module,exports){
 function inventoryWidget() {
     return {
@@ -65439,10 +65445,12 @@ function inventoryWidget() {
 }
 
 module.exports = inventoryWidget;
+
 },{}],20:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('PlayerController', require('./player-controller.js'))
     .directive('playerWidget', require('./player-directive.js'));
+
 },{"./player-controller.js":21,"./player-directive.js":22,"angular":11}],21:[function(require,module,exports){
 function PlayerController() {
     var pc = this;
@@ -65450,6 +65458,7 @@ function PlayerController() {
 }
 
 module.exports = PlayerController;
+
 },{}],22:[function(require,module,exports){
 function playerWidget() {
     return {
@@ -65459,6 +65468,7 @@ function playerWidget() {
 }
 
 module.exports = playerWidget;
+
 },{}],23:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('SessionController', require('./session-controller.js'));
