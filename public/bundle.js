@@ -65387,21 +65387,83 @@ require('./angular');
 module.exports = angular;
 
 },{"./angular":10}],12:[function(require,module,exports){
-function DashboardController() {
+function AuctionController() {
+
+}
+
+module.exports = AuctionController;
+},{}],13:[function(require,module,exports){
+function auctionWidget() {
+    return {
+        restrict: 'E',
+        templateUrl: 'src/components/dashboard/auction-widget/auction.html'
+    };
+}
+
+module.exports = auctionWidget;
+},{}],14:[function(require,module,exports){
+require('angular').module('crossover')
+    .controller('AuctionController', require('./auction-controller.js'))
+    .directive('auctionWidget', require('./auction-directive.js'));
+},{"./auction-controller.js":12,"./auction-directive.js":13,"angular":11}],15:[function(require,module,exports){
+function DashboardController(sessionFactory) {
 
 }
 
 module.exports = DashboardController;
-
-},{}],13:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 require('angular').module('crossover')
-	.controller('DashboardController', require('./dashboard-controller.js'));
+	.controller('DashboardController', require('./dashboard-controller.js'))
+    .controller('PlayerController', require('./player-widget/player-controller.js'));
 
-},{"./dashboard-controller.js":12,"angular":11}],14:[function(require,module,exports){
+require('./player-widget');
+require('./inventory-widget');
+require('./auction-widget');
+},{"./auction-widget":14,"./dashboard-controller.js":15,"./inventory-widget":17,"./player-widget":20,"./player-widget/player-controller.js":21,"angular":11}],17:[function(require,module,exports){
+require('angular').module('crossover')
+    .controller('InventoryController', require('./inventory-controller.js'))
+    .directive('inventoryWidget', require('./inventory-directive.js'));
+
+},{"./inventory-controller.js":18,"./inventory-directive.js":19,"angular":11}],18:[function(require,module,exports){
+function InventoryController() {
+
+}
+
+module.exports = InventoryController;
+},{}],19:[function(require,module,exports){
+function inventoryWidget() {
+    return {
+        restrict: 'E',
+        templateUrl: 'src/components/dashboard/inventory-widget/inventory.html'
+    };
+}
+
+module.exports = inventoryWidget;
+},{}],20:[function(require,module,exports){
+require('angular').module('crossover')
+    .controller('PlayerController', require('./player-controller.js'))
+    .directive('playerWidget', require('./player-directive.js'));
+},{"./player-controller.js":21,"./player-directive.js":22,"angular":11}],21:[function(require,module,exports){
+function PlayerController() {
+    var pc = this;
+    console.log('hello player');
+}
+
+module.exports = PlayerController;
+},{}],22:[function(require,module,exports){
+function playerWidget() {
+    return {
+        restrict: 'E',
+        templateUrl: 'src/components/dashboard/player-widget/player.html'
+    };
+}
+
+module.exports = playerWidget;
+},{}],23:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('SessionController', require('./session-controller.js'));
 
-},{"./session-controller.js":15,"angular":11}],15:[function(require,module,exports){
+},{"./session-controller.js":24,"angular":11}],24:[function(require,module,exports){
 function SessionController($state, sessionFactory) {
     var sc = this;
 
@@ -65426,7 +65488,7 @@ function SessionController($state, sessionFactory) {
 
 module.exports = SessionController;
 
-},{}],16:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [
     require('angular-ui-router'),
@@ -65462,13 +65524,13 @@ require('../shared');
 require('../components/login-page');
 require('../components/dashboard');
 
-},{"../components/dashboard":13,"../components/login-page":14,"../shared":17,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],17:[function(require,module,exports){
+},{"../components/dashboard":16,"../components/login-page":23,"../shared":26,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],26:[function(require,module,exports){
 require('angular').module('crossover')
     .value('sessionAPI', '/myapplication/session')
     .value('createUserAPI', '/myapplication/createuser')
     .factory('sessionFactory', require('./session-factory.js'));
 
-},{"./session-factory.js":18,"angular":11}],18:[function(require,module,exports){
+},{"./session-factory.js":27,"angular":11}],27:[function(require,module,exports){
 function sessionFactory($http, sessionAPI, createUserAPI) {
 
     return {
@@ -65506,4 +65568,4 @@ function sessionFactory($http, sessionAPI, createUserAPI) {
 
 module.exports = sessionFactory;
 
-},{}]},{},[16]);
+},{}]},{},[25]);

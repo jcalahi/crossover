@@ -1,73 +1,11 @@
 <div class="container">
-        <div class="panel">
-            <div class="panel-heading">
-                <h4>Player Stats</h4>
-                <i class="fa fa-power-off fa-lg fa-pull-right white pointer"></i>
-                <!--<i class="material-icons">power_settings_new</i>-->
-            </div>
-            <div class="panel-body">
-                <p class="label">Name: <span class="value strong">Julius Calahi</span></p>
-                <p class="label">Coins: <span class=" value strong">2325</span></p>
-            </div>
-        </div>
-        <div class="panel">
-            <div class="panel-heading">
-                <h4>Inventory</h4>
-            </div>
-            <div class="panel-body widget-2">
-                <ul>
-                    <li class="item">
-                        <div class="column valign-top">
-                            <i class="fa fa-laptop fa-3x"></i><!-- replace with img HTML tag -->
-                            <p class="item-name">Item name</p>
-                        </div>
-                        <div class="column valign-top">
-                            <p class="label">Quantity</p>
-                            <p class="quantity">250</p>
-                        </div>
-                        <div class="column valign-middle">
-                            <button class="primary-btn">Auction</button>
-                        </div>
-                    </li>
-                    <li class="item">
-                        <div class="column valign-top">
-                            <i class="fa fa-laptop fa-3x"></i><!-- replace with img HTML tag -->
-                            <p class="item-name">Item name</p>
-                        </div>
-                        <div class="column valign-top">
-                            <p class="label">Quantity</p>
-                            <p class="quantity">250</p>
-                        </div>
-                        <div class="column valign-middle">
-                            <button class="primary-btn">Auction</button>
-                        </div>
-                    </li>
-                    <li class="item">
-                        <div class="column valign-top">
-                            <i class="fa fa-laptop fa-3x"></i><!-- replace with img HTML tag -->
-                            <p class="item-name">Item name</p>
-                        </div>
-                        <div class="column valign-top">
-                            <p class="label">Quantity</p>
-                            <p class="quantity">250</p>
-                        </div>
-                        <div class="column valign-middle">
-                            <button class="primary-btn">Auction</button>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="panel">
-            <div class="panel-heading">
-                <h4>Current Auction</h4>
-            </div>
-            <div class="panel-body">
-                <p class="label">Seller: <span class="value strong">The Seller Name</span></p>
-                <p class="label">Time left: <span class="lowercase strong">90 seconds</span></p>
-                <p class="label">Winning bid: <span class="value strong">108</span></p>
-                <input type="number" class="block spacer" min="1" max="500" />
-                <button class="primary-btn green-btn block"><i class="fa fa-money fa-lg white icon-spacing"></i>Place Bid</button>
-            </div>
-        </div>
+    <div class="panel">
+        <player-widget></player-widget>
     </div>
+    <div class="panel">
+        <inventory-widget></inventory-widget>
+    </div>
+    <div class="panel">
+        <auction-widget></auction-widget>
+    </div>
+</div>

@@ -1,4 +1,4 @@
-function DashboardController() {
+function DashboardController(sessionFactory) {
 
 }
 
