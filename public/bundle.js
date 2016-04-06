@@ -65387,28 +65387,44 @@ require('./angular');
 module.exports = angular;
 
 },{"./angular":10}],12:[function(require,module,exports){
-require('angular').module('crossover')
-    .controller('LoginController', require('./login-controller.js'));
+function DashboardController() {
 
-},{"./login-controller.js":13,"angular":11}],13:[function(require,module,exports){
-function LoginController(sessionFactory) {
-    var lc = this;
-
-    lc.userName = '';
-
-    lc.init = function() {
-        sessionFactory.get();
-    };
-
-    lc.loginBtn = function(name) {
-    };
-
-    lc.init();
 }
 
-module.exports = LoginController;
+module.exports = DashboardController;
+},{}],13:[function(require,module,exports){
+require('angular').module('crossover')
+	.controller('DashboardController', require('./dashboard-controller.js'));
+},{"./dashboard-controller.js":12,"angular":11}],14:[function(require,module,exports){
+require('angular').module('crossover')
+    .controller('SessionController', require('./session-controller.js'));
 
-},{}],14:[function(require,module,exports){
+},{"./session-controller.js":15,"angular":11}],15:[function(require,module,exports){
+function SessionController($state, sessionFactory) {
+    var sc = this;
+
+    sc.userName = '';
+
+    sc.init = function() {
+        sessionFactory.get().then(function(response) {
+            console.log(response.data);
+            if (response.data.hasSession) {
+                $state.go('dashboard');
+            }
+        });
+    };
+
+    sc.loginBtn = function(username) {
+    	sessionFactory.create(username);
+        $state.go('dashboard');
+    };
+
+    sc.init();
+}
+
+module.exports = SessionController;
+
+},{}],16:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [
     require('angular-ui-router'),
@@ -65419,11 +65435,19 @@ require('angular').module('crossover', [
 ]).config(config);
 
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
+
     $stateProvider.state('login', {
         url: '/',
-        controller: 'LoginController',
-        controllerAs: 'loginCtrl',
+        controller: 'SessionController',
+        controllerAs: 'sessionCtrl',
         templateUrl: 'src/components/login-page/login.html'
+    })
+
+    $stateProvider.state('dashboard', {
+        url: '/dashboard',
+        controller: 'DashboardController',
+        controllerAs: 'dashbordCtrl',
+        templateUrl: 'src/components/dashboard/dashboard.html'
     });
 
     $locationProvider.html5Mode(true);
@@ -65434,30 +65458,38 @@ require('../shared');
 
 // login-page
 require('../components/login-page');
+require('../components/dashboard');
 
-},{"../components/login-page":12,"../shared":15,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],15:[function(require,module,exports){
+},{"../components/dashboard":13,"../components/login-page":14,"../shared":17,"angular":11,"angular-animate":2,"angular-aria":4,"angular-material":6,"angular-messages":8,"angular-ui-router":9}],17:[function(require,module,exports){
 require('angular').module('crossover')
-    .value('sessionAPI', '/myapplication/getsession')
+    .value('sessionAPI', '/myapplication/session')
+    .value('createUserAPI', '/myapplication/createuser')
     .factory('sessionFactory', require('./session-factory.js'));
 
-},{"./session-factory.js":16,"angular":11}],16:[function(require,module,exports){
-function sessionFactory($http, sessionAPI) {
+},{"./session-factory.js":18,"angular":11}],18:[function(require,module,exports){
+function sessionFactory($http, sessionAPI, createUserAPI) {
 
     return {
         create: create,
         get: get
     };
 
-    function create() {
+    function create(username) {
+        var requestObj = {
+            method: 'POST',
+            url: createUserAPI,
+            data: { username: username }
+        };
+
+
+        return $http(requestObj);
     }
 
     function get() {
-
         var requestObj = {
             method: 'GET',
             url: sessionAPI
         };
-
         return $http(requestObj).then(successCb, errorCb);
     }
 
@@ -65471,5 +65503,4 @@ function sessionFactory($http, sessionAPI) {
 }
 
 module.exports = sessionFactory;
-
-},{}]},{},[14]);
+},{}]},{},[16]);

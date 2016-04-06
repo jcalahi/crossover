@@ -8,11 +8,19 @@ require('angular').module('crossover', [
 ]).config(config);
 
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
+
     $stateProvider.state('login', {
         url: '/',
-        controller: 'LoginController',
-        controllerAs: 'loginCtrl',
+        controller: 'SessionController',
+        controllerAs: 'sessionCtrl',
         templateUrl: 'src/components/login-page/login.html'
+    })
+
+    $stateProvider.state('dashboard', {
+        url: '/dashboard',
+        controller: 'DashboardController',
+        controllerAs: 'dashbordCtrl',
+        templateUrl: 'src/components/dashboard/dashboard.html'
     });
 
     $locationProvider.html5Mode(true);
@@ -23,3 +31,4 @@ require('../shared');
 
 // login-page
 require('../components/login-page');
+require('../components/dashboard');
