@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 var app = express(); // jshint ignore:line
-var PORT = process.env.PORT || 8000;
+var PORT = process.env.PORT || 3030;
 
 app.use(session({
     secret: 'hireme',
@@ -32,6 +32,4 @@ app.use('/myapplication', require('./server/routes/create-user'));
 app.listen(PORT, function() {
     console.log('Server started on port:', PORT);
 });
-
-
 

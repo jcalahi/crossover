@@ -1,0 +1,146 @@
+﻿body {
+    font-family: Arial, Tahoma, Geneva, Verdana, sans-serif;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+.block {
+    display: block;
+    margin: auto;
+}
+
+.container {
+    width: 1200px;
+    margin: auto;
+    display: table;
+    border-spacing: 1.5em;
+}
+
+.panel {
+    width: 32%;
+    display: table-cell;
+    vertical-align: top;
+    border: 1px solid #78909C;
+    background-color: #FAFAFA;
+}
+
+.panel-heading {
+    background-color: #78909C;
+    padding: 1.2em 1.5em;
+}
+
+.panel-heading h4 {
+    text-transform: uppercase;
+    color: #fff;
+    margin: 0;
+    display: inline-block;
+}
+
+.panel-body {
+    border-top: 1px solid #78909C;
+    padding: 0.6em 1.5em;
+}
+
+.item {
+    list-style: none;
+    display: table;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.item:nth-child(n+2) {
+    border-top: 1px solid #BDBDBD;
+}
+
+.label {
+    color: #757575;
+    text-transform: uppercase;
+    font-size: 0.8em;
+}
+
+.item-name {
+    margin: 0.5em 0;
+}
+
+.quantity {
+    font-size: 1.3em;
+    margin: 0;
+}
+
+.widget-2 {
+    padding: 0;
+}
+
+.widget-2 .column {
+    display: table-cell;
+    width: 33%;
+    padding: 0.5em;
+    text-align: center;
+}
+
+/* buttons */
+.primary-btn {
+    background-color: #1E88E5;
+    color: white;
+    text-transform: uppercase;
+    border: none;
+    padding: 1em 1.2em;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.primary-btn:hover {
+    background-color: #1976D2;
+
+}
+
+.green-btn {
+    background-color: #4CAF50;
+}
+
+.green-btn:hover {
+    background-color: #43A047;
+}
+
+/* colors */
+.white {
+    color: #fff;
+}
+
+/* others */
+.pointer,
+.primary-btn:hover {
+    cursor: pointer;
+}
+
+.icon-spacing {
+    margin: 0 0.5em 0 0;
+}
+
+.spacer {
+    margin: 0 auto 1em;
+}
+
+.valign-top {
+    vertical-align: top;
+}
+
+.valign-middle {
+    vertical-align: middle;
+}
+
+.strong {
+    font-weight: bold;
+}
+
+.value {
+    text-transform: capitalize;
+}
+
+.lowercase {
+    text-transform: lowercase;
+}
