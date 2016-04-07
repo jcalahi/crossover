@@ -1,2 +1,2 @@
 require('angular').module('crossover')
-    .controller('SessionController', require('./session-controller.js'));
+    .controller('LoginController', require('./login-controller.js'));

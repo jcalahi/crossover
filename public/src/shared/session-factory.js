@@ -12,15 +12,16 @@ function sessionFactory($http, sessionAPI, createUserAPI) {
             data: { username: username }
         };
 
-
         return $http(requestObj);
     }
 
     function get() {
+
         var requestObj = {
             method: 'GET',
             url: sessionAPI
         };
+
         return $http(requestObj).then(successCb, errorCb);
     }
 

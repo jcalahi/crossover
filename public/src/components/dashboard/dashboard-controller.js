@@ -1,4 +1,5 @@
 function DashboardController(sessionFactory) {
+    var dc = this;
 
 }
 

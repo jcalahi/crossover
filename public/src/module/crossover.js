@@ -11,10 +11,10 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
 
     $stateProvider.state('login', {
         url: '/',
-        controller: 'SessionController',
-        controllerAs: 'sessionCtrl',
+        controller: 'LoginController',
+        controllerAs: 'loginCtrl',
         templateUrl: 'src/components/login-page/login.html'
-    })
+    });
 
     $stateProvider.state('dashboard', {
         url: '/dashboard',

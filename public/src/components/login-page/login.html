@@ -4,9 +4,9 @@
             <h4 class="md-title">Welcome Page</h4>
             <md-input-container class="md-block">
                 <label>Username</label>
-                <input required name="userName" ng-model="sessionCtrl.userName">
+                <input required name="userName" ng-model="loginCtrl.userName">
             </md-input-container>
-            <md-button class="md-raised md-primary" ng-click="sessionCtrl.loginBtn(sessionCtrl.userName)" ng-disabled="sessionCtrl.userName.length <= 3">Enter</md-button>
+            <md-button class="md-raised md-primary" ng-click="loginCtrl.loginBtn(loginCtrl.userName)" ng-disabled="loginCtrl.userName.length <= 3">Enter</md-button>
         </form>
     </md-content>
 </div>

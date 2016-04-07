@@ -1,23 +1,22 @@
-function SessionController($state, sessionFactory) {
-    var sc = this;
+function LoginController($state, sessionFactory) {
+    var lc = this;
 
-    sc.userName = '';
+    lc.userName = '';
 
-    sc.init = function() {
+    lc.init = function() {
         sessionFactory.get().then(function(response) {
-            console.log(response.data);
             if (response.data.hasSession) {
                 $state.go('dashboard');
             }
         });
     };
 
-    sc.loginBtn = function(username) {
+    lc.loginBtn = function(username) {
     	sessionFactory.create(username);
         $state.go('dashboard');
     };
 
-    sc.init();
+    lc.init();
 }
 
-module.exports = SessionController;
+module.exports = LoginController;

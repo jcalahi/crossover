@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var path = require('path');
 var bodyParser = require('body-parser');
-var connection = require('../database/dbconfig');
+var connection = require('../../database/dbconfig');
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -26,4 +26,3 @@ router.get('/session', function(req, res) {
 });
 
 module.exports = router;
-

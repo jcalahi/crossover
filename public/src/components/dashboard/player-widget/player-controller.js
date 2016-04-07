@@ -1,6 +1,9 @@
 function PlayerController() {
     var pc = this;
-    console.log('hello player');
+
+    pc.logoutBtn = function() {
+
+    };
 }
 
 module.exports = PlayerController;
