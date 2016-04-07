@@ -1,4 +1,4 @@
-function LoginController($state, sessionFactory) {
+function LoginController($state, loginFactory, sessionFactory) {
     var lc = this;
 
     lc.userName = '';
@@ -7,6 +7,7 @@ function LoginController($state, sessionFactory) {
     lc.init = function() {
         sessionFactory.get().then(function(response) {
             if (response.data.username) {
+                loginFactory.getDashboard(response.data.username);
                 $state.go('dashboard');
             }
         });
@@ -18,6 +19,7 @@ function LoginController($state, sessionFactory) {
         } else {
             lc.inValid = false;
             sessionFactory.create(username);
+            loginFactory.getDashboard(username);
             $state.go('dashboard');
         }
     };

@@ -3,10 +3,10 @@ function loginFactory($http, dashboardAPI) {
         getDashboard: getDashboard
     };
 
-    function getDashboard(username) {
+    function getDashboard(name) {
         var requestObj = {
             method: 'GET',
-            url: dashboardAPI + '/' + username
+            url: dashboardAPI + '/' + name
         };
 
         return $http(requestObj).then(function(response) {

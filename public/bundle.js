@@ -35280,7 +35280,7 @@ require('angular').module('crossover')
     .directive('auctionWidget', require('./auction-directive.js'));
 
 },{"./auction-controller.js":4,"./auction-directive.js":5,"angular":3}],7:[function(require,module,exports){
-function DashboardController($stateParams, sessionFactory) {
+function DashboardController() {
     var dc = this;
 }
 
@@ -35361,7 +35361,7 @@ require('angular').module('crossover')
     .factory('loginFactory', require('./login-factory.js'));
 
 },{"./login-controller.js":17,"./login-factory.js":18,"angular":3}],17:[function(require,module,exports){
-function LoginController($state, sessionFactory) {
+function LoginController($state, loginFactory, sessionFactory) {
     var lc = this;
 
     lc.userName = '';
@@ -35370,6 +35370,7 @@ function LoginController($state, sessionFactory) {
     lc.init = function() {
         sessionFactory.get().then(function(response) {
             if (response.data.username) {
+                loginFactory.getDashboard(response.data.username);
                 $state.go('dashboard');
             }
         });
@@ -35381,6 +35382,7 @@ function LoginController($state, sessionFactory) {
         } else {
             lc.inValid = false;
             sessionFactory.create(username);
+            loginFactory.getDashboard(username);
             $state.go('dashboard');
         }
     };
@@ -35389,16 +35391,17 @@ function LoginController($state, sessionFactory) {
 }
 
 module.exports = LoginController;
+
 },{}],18:[function(require,module,exports){
 function loginFactory($http, dashboardAPI) {
     return {
         getDashboard: getDashboard
     };
 
-    function getDashboard(username) {
+    function getDashboard(name) {
         var requestObj = {
             method: 'GET',
-            url: dashboardAPI + '/' + username
+            url: dashboardAPI + '/' + name
         };
 
         return $http(requestObj).then(function(response) {
@@ -35408,6 +35411,7 @@ function loginFactory($http, dashboardAPI) {
 }
 
 module.exports = loginFactory;
+
 },{}],19:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [require('angular-ui-router')]).config(config);
@@ -35437,6 +35441,7 @@ require('../shared');
 // login-page
 require('../components/login-page');
 require('../components/dashboard');
+
 },{"../components/dashboard":8,"../components/login-page":16,"../shared":20,"angular":3,"angular-ui-router":1}],20:[function(require,module,exports){
 require('angular').module('crossover')
     .value('sessionAPI', '/myapplication/session')

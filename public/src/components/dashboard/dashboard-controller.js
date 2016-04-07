@@ -1,4 +1,4 @@
-function DashboardController($stateParams, sessionFactory) {
+function DashboardController() {
     var dc = this;
 }
 
