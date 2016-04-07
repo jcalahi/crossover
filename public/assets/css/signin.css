@@ -1,0 +1,44 @@
+.signin-form {
+    width: 260px;
+    border: 1px solid #BDBDBD;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 2em;
+    margin: auto;
+    background-color: #FAFAFA;
+}
+
+.signin-form h4 {
+    margin: 0 0 1.2em;
+    text-transform: uppercase;
+    color: #607D8B;
+}
+
+.form-field:last-of-type {
+    margin: 1em 0 0.5em;
+}
+
+.form-field:nth-child(4) .column {
+    margin: 0.1em 0 0.6em;
+}
+
+.form-field .column {
+    display: inline-block;
+    margin: 0.5em 0;
+}
+
+.form-field .column:first-child {
+    width: 10%;
+    text-align: center;
+    padding: 0 0.2em;
+}
+
+.form-field .column:last-child {
+    width: 80%;
+}
+
+.form-field input {
+    height: 1.6em;
+    padding: 0.3em 0.4em;
+}

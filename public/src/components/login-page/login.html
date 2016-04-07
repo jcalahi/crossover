@@ -1,12 +1,21 @@
-<div>
-    <md-content layout-gt-sm="row" layout-padding>
-        <form>
-            <h4 class="md-title">Welcome Page</h4>
-            <md-input-container class="md-block">
-                <label>Username</label>
-                <input required name="userName" ng-model="loginCtrl.userName">
-            </md-input-container>
-            <md-button class="md-raised md-primary" ng-click="loginCtrl.loginBtn(loginCtrl.userName)" ng-disabled="loginCtrl.userName.length <= 3">Enter</md-button>
-        </form>
-    </md-content>
+<div class="container">
+    <div class="signin-form">
+        <h4>Crossover Project</h4>
+        <div class="form-field">
+            <div class="column">
+                <i class="fa fa-user fa-lg gray-1"></i>
+            </div>
+            <div class="column">
+                <input type="text" placeholder="username" class="full" ng-model="loginCtrl.userName" />
+            </div>
+        </div>
+        <div class="form-field">
+            <div class="column" ng-if="loginCtrl.inValid">
+                <div class="link font-13">Should contain atleast 3 characters</div>
+            </div>
+        </div>
+        <div class="form-field align-right">
+            <button class="primary-btn full" ng-click="loginCtrl.loginBtn(loginCtrl.userName)">ENTER</button>
+        </div>
+    </div>
 </div>

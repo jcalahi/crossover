@@ -8,17 +8,15 @@ router.use(bodyParser.urlencoded({ extended: true }));
 var insertQuery = 'INSERT INTO users(name, coins) VALUES (?, ?)';
 var searchQuery = 'SELECT name FROM users WHERE name=?';
 
-router.use(function(req, res, next) {
+router.use('/createuser', function(req, res, next) {
 
     connection.query(searchQuery, req.body.username, function(err, result) {
-
-        if (result.length > 0) {
-            req.params.username = req.body.username;
-            console.log('user exists', req.params.username);
+        if (result) {
+            console.log('user exists');
         } else {
+            req.session.isNewUser = true;
             console.log('user not found');
         }
-
     });
 
     next();
@@ -26,7 +24,7 @@ router.use(function(req, res, next) {
 
 router.post('/createuser', function(req, res) {
 
-    /*if (isNewUser) {
+    if (req.session.isNewUser) {
         connection.query(insertQuery, [req.body.username, 1000], function(err, result) {
             if (err) {
                 throw err;
@@ -35,10 +33,8 @@ router.post('/createuser', function(req, res) {
         });
     } else {
         req.session.username = req.body.username;
-    }*/
-
-    connection.end();
-    res.end();
+    }
+    res.send('user created');
 });
 
 module.exports = router;
