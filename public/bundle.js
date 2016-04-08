@@ -35280,34 +35280,73 @@ require('angular').module('crossover')
     .directive('auctionWidget', require('./auction-directive.js'));
 
 },{"./auction-controller.js":4,"./auction-directive.js":5,"angular":3}],7:[function(require,module,exports){
-function DashboardController() {
+function DashboardController(dashboardFactory) {
     var dc = this;
+    dc.userData = dashboardFactory.getName();
+
+    dashboardFactory.getData(dashboardFactory.getName()).then(function(response) {
+        console.log(response);
+    });
 }
 
 module.exports = DashboardController;
 
 },{}],8:[function(require,module,exports){
+function dashboardFactory($http, dashboardAPI) {
+
+    var name = null;
+
+    return {
+        getData: getData,
+        getName: getName,
+        setName: setName
+    };
+
+    function getName() {
+        return this.name;
+    }
+
+    function setName(name) {
+        this.name = name;
+    }
+
+    function getData(username) {
+        var request = {
+            method: 'GET',
+            url: dashboardAPI + '/' + username
+        };
+
+        return $http(request).then(function(response) {
+            return response;
+        });
+
+    }
+
+}
+
+module.exports = dashboardFactory;
+},{}],9:[function(require,module,exports){
 require('angular').module('crossover')
 	.controller('DashboardController', require('./dashboard-controller.js'))
-    .controller('PlayerController', require('./player-widget/player-controller.js'));
+    .controller('PlayerController', require('./player-widget/player-controller.js'))
+    .factory('dashboardFactory', require('./dashboard-factory.js'));
 
 require('./player-widget');
 require('./inventory-widget');
 require('./auction-widget');
-
-},{"./auction-widget":6,"./dashboard-controller.js":7,"./inventory-widget":9,"./player-widget":12,"./player-widget/player-controller.js":13,"angular":3}],9:[function(require,module,exports){
+},{"./auction-widget":6,"./dashboard-controller.js":7,"./dashboard-factory.js":8,"./inventory-widget":10,"./player-widget":13,"./player-widget/player-controller.js":14,"angular":3}],10:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('InventoryController', require('./inventory-controller.js'))
     .directive('inventoryWidget', require('./inventory-directive.js'));
 
-},{"./inventory-controller.js":10,"./inventory-directive.js":11,"angular":3}],10:[function(require,module,exports){
+},{"./inventory-controller.js":11,"./inventory-directive.js":12,"angular":3}],11:[function(require,module,exports){
 function InventoryController() {
 
 }
 
 module.exports = InventoryController;
 
-},{}],11:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 function inventoryWidget() {
     return {
         restrict: 'E',
@@ -35317,13 +35356,13 @@ function inventoryWidget() {
 
 module.exports = inventoryWidget;
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('PlayerController', require('./player-controller.js'))
     .factory('playerFactory', require('./player-factory.js'))
     .directive('playerWidget', require('./player-directive.js'));
 
-},{"./player-controller.js":13,"./player-directive.js":14,"./player-factory.js":15,"angular":3}],13:[function(require,module,exports){
+},{"./player-controller.js":14,"./player-directive.js":15,"./player-factory.js":16,"angular":3}],14:[function(require,module,exports){
 function PlayerController() {
     var pc = this;
 
@@ -35334,19 +35373,30 @@ function PlayerController() {
 
 module.exports = PlayerController;
 
-},{}],14:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 function playerWidget() {
+
+    var self = {};
+
+    self.link = function(scope, elem, attrs) {
+
+    };
+
     return {
+        link: self.link,
         restrict: 'E',
         controller: 'PlayerController',
         controllerAs: 'playerCtrl',
+        bindToController: true,
+        scope: {
+            userData: '='
+        },
         templateUrl: 'src/components/dashboard/player-widget/player.html'
     };
 }
 
 module.exports = playerWidget;
-
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 function playerFactory($http) {
     return {
 
@@ -35355,13 +35405,12 @@ function playerFactory($http) {
 
 module.exports = playerFactory;
 
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 require('angular').module('crossover')
-    .controller('LoginController', require('./login-controller.js'))
-    .factory('loginFactory', require('./login-factory.js'));
+    .controller('LoginController', require('./login-controller.js'));
 
-},{"./login-controller.js":17,"./login-factory.js":18,"angular":3}],17:[function(require,module,exports){
-function LoginController($state, loginFactory, sessionFactory) {
+},{"./login-controller.js":18,"angular":3}],18:[function(require,module,exports){
+function LoginController($state, dashboardFactory, sessionFactory) {
     var lc = this;
 
     lc.userName = '';
@@ -35370,8 +35419,8 @@ function LoginController($state, loginFactory, sessionFactory) {
     lc.init = function() {
         sessionFactory.get().then(function(response) {
             if (response.data.username) {
-                loginFactory.getDashboard(response.data.username);
                 $state.go('dashboard');
+                dashboardFactory.setName(response.data.username);
             }
         });
     };
@@ -35382,7 +35431,7 @@ function LoginController($state, loginFactory, sessionFactory) {
         } else {
             lc.inValid = false;
             sessionFactory.create(username);
-            loginFactory.getDashboard(username);
+            dashboardFactory.setName(username);
             $state.go('dashboard');
         }
     };
@@ -35391,26 +35440,6 @@ function LoginController($state, loginFactory, sessionFactory) {
 }
 
 module.exports = LoginController;
-
-},{}],18:[function(require,module,exports){
-function loginFactory($http, dashboardAPI) {
-    return {
-        getDashboard: getDashboard
-    };
-
-    function getDashboard(name) {
-        var requestObj = {
-            method: 'GET',
-            url: dashboardAPI + '/' + name
-        };
-
-        return $http(requestObj).then(function(response) {
-            return response;
-        });
-    }
-}
-
-module.exports = loginFactory;
 
 },{}],19:[function(require,module,exports){
 'use strict'; // jshint ignore:line
@@ -35428,7 +35457,7 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('dashboard', {
             url: '/dashboard',
             controller: 'DashboardController',
-            controllerAs: 'dashbordCtrl',
+            controllerAs: 'dashboardCtrl',
             templateUrl: 'src/components/dashboard/dashboard.html'
         });
 
@@ -35442,7 +35471,7 @@ require('../shared');
 require('../components/login-page');
 require('../components/dashboard');
 
-},{"../components/dashboard":8,"../components/login-page":16,"../shared":20,"angular":3,"angular-ui-router":1}],20:[function(require,module,exports){
+},{"../components/dashboard":9,"../components/login-page":17,"../shared":20,"angular":3,"angular-ui-router":1}],20:[function(require,module,exports){
 require('angular').module('crossover')
     .value('sessionAPI', '/myapplication/session')
     .value('createUserAPI', '/myapplication/createuser')

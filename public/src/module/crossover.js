@@ -13,7 +13,7 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
         .state('dashboard', {
             url: '/dashboard',
             controller: 'DashboardController',
-            controllerAs: 'dashbordCtrl',
+            controllerAs: 'dashboardCtrl',
             templateUrl: 'src/components/dashboard/dashboard.html'
         });
 

@@ -1,16 +1,20 @@
 var router = require('express').Router();
 var bodyParser = require('body-parser');
 var connection = require('../../database/dbconfig');
+var query = require('../../database/query-strings');
 
 router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.urlencoded({ extended: false }));
 
-var insertQuery = 'INSERT INTO users(name, coins) VALUES (?, ?)';
-var searchQuery = 'SELECT name FROM users WHERE name=?';
+connection.connect(function(err) {
+    if (err) { throw err; }
+    console.log('Connected to DB...');
+    connection.query(query.createTable);
+});
 
 router.use('/createuser', function(req, res, next) {
 
-    connection.query(searchQuery, req.body.username, function(err, result) {
+    connection.query(query.searchUser, req.body.username, function(err, result) {
 
         if (err) throw err;
 
@@ -18,7 +22,7 @@ router.use('/createuser', function(req, res, next) {
             console.log('user exists');
         } else {
 
-            connection.query(insertQuery, [req.body.username, 1000], function(err, result) {
+            connection.query(query.insertUser, [req.body.username, 1000, 30, 18, 1], function(err, result) {
                 if (err) throw err;
                 console.log(req.body.username, 'added to DB');
             });

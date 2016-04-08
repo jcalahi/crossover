@@ -1,4 +1,4 @@
-function LoginController($state, loginFactory, sessionFactory) {
+function LoginController($state, dashboardFactory, sessionFactory) {
     var lc = this;
 
     lc.userName = '';
@@ -7,8 +7,8 @@ function LoginController($state, loginFactory, sessionFactory) {
     lc.init = function() {
         sessionFactory.get().then(function(response) {
             if (response.data.username) {
-                loginFactory.getDashboard(response.data.username);
                 $state.go('dashboard');
+                dashboardFactory.setName(response.data.username);
             }
         });
     };
@@ -19,7 +19,7 @@ function LoginController($state, loginFactory, sessionFactory) {
         } else {
             lc.inValid = false;
             sessionFactory.create(username);
-            loginFactory.getDashboard(username);
+            dashboardFactory.setName(username);
             $state.go('dashboard');
         }
     };

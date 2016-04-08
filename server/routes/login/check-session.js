@@ -11,6 +11,7 @@ router.use('/session', function(req, res, next) {
 	if (!req.session.username) {
 		req.session.username = req.body.username;
 	}
+
     next();
 });
 
