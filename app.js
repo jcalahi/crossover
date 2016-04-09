@@ -26,7 +26,9 @@ app.use(favicon(path.join(__dirname + '/public/images/favicon.ico')));
 
 app.use('/myapplication', require('./server/routes/login/check-session'));
 app.use('/myapplication', require('./server/routes/login/create-user'));
+
 app.use('/myapplication', require('./server/routes/dashboard/dashboard'));
+app.use('/myapplication', require('./server/routes/dashboard/logout'));
 
 app.listen(PORT, function() {
     console.log('Server started on port:', PORT);

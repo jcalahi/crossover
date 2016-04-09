@@ -2,48 +2,24 @@
     <h4>Inventory</h4>
 </div>
 <div class="panel-body widget-2">
-    <ul>
+    <ul ng-repeat="item in inventoryCtrl.inventoryItems">
         <li class="item">
             <div class="column valign-top">
                 <i class="fa fa-laptop fa-3x"></i>
                 <!-- replace with img HTML tag -->
-                <p class="item-name">Item name</p>
+                <p class="item-name">{{ item.name }}</p>
             </div>
             <div class="column valign-top">
                 <p class="label">Quantity</p>
-                <p class="quantity">250</p>
+                <p class="quantity">{{ item.quantity }}</p>
             </div>
             <div class="column valign-middle">
-                <button class="primary-btn">Auction</button>
-            </div>
-        </li>
-        <li class="item">
-            <div class="column valign-top">
-                <i class="fa fa-laptop fa-3x"></i>
-                <!-- replace with img HTML tag -->
-                <p class="item-name">Item name</p>
-            </div>
-            <div class="column valign-top">
-                <p class="label">Quantity</p>
-                <p class="quantity">250</p>
-            </div>
-            <div class="column valign-middle">
-                <button class="primary-btn">Auction</button>
-            </div>
-        </li>
-        <li class="item">
-            <div class="column valign-top">
-                <i class="fa fa-laptop fa-3x"></i>
-                <!-- replace with img HTML tag -->
-                <p class="item-name">Item name</p>
-            </div>
-            <div class="column valign-top">
-                <p class="label">Quantity</p>
-                <p class="quantity">250</p>
-            </div>
-            <div class="column valign-middle">
-                <button class="primary-btn">Auction</button>
+                <button class="primary-btn" ng-click="inventoryCtrl.toggleModal(item.name, item.quantity)">Auction</button>
             </div>
         </li>
     </ul>
 </div>
+
+<modal></modal>
+
+

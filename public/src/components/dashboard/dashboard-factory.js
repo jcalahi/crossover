@@ -5,8 +5,22 @@ function dashboardFactory($http, dashboardAPI) {
     return {
         getData: getData,
         getName: getName,
-        setName: setName
+        setName: setName,
+        logout: logout
     };
+
+    function getData(username) {
+        var request = {
+                method: 'GET',
+                url: dashboardAPI + '/' + username
+            },
+            playerStats = {};
+
+        return $http(request).then(function(response) {
+            return response;
+        });
+
+    }
 
     function getName() {
         return this.name;
@@ -16,17 +30,14 @@ function dashboardFactory($http, dashboardAPI) {
         this.name = name;
     }
 
-    function getData(username) {
+    function logout() {
         var request = {
             method: 'GET',
-            url: dashboardAPI + '/' + username
+            url: dashboardAPI
         };
 
-        return $http(request).then(function(response) {
-            return response;
-        });
-
-    }
+        $http(request);
+    };
 
 }
 

@@ -35280,12 +35280,18 @@ require('angular').module('crossover')
     .directive('auctionWidget', require('./auction-directive.js'));
 
 },{"./auction-controller.js":4,"./auction-directive.js":5,"angular":3}],7:[function(require,module,exports){
-function DashboardController(dashboardFactory) {
+function DashboardController($scope, $state, dashboardFactory) {
     var dc = this;
-    dc.userData = dashboardFactory.getName();
+
+    dc.playerStats = {};
 
     dashboardFactory.getData(dashboardFactory.getName()).then(function(response) {
-        console.log(response);
+        dc.playerStats = response.data;
+    });
+
+    $scope.$on('logout', function() {
+        dashboardFactory.logout();
+        $state.go('login');
     });
 }
 
@@ -35299,8 +35305,22 @@ function dashboardFactory($http, dashboardAPI) {
     return {
         getData: getData,
         getName: getName,
-        setName: setName
+        setName: setName,
+        logout: logout
     };
+
+    function getData(username) {
+        var request = {
+                method: 'GET',
+                url: dashboardAPI + '/' + username
+            },
+            playerStats = {};
+
+        return $http(request).then(function(response) {
+            return response;
+        });
+
+    }
 
     function getName() {
         return this.name;
@@ -35310,17 +35330,14 @@ function dashboardFactory($http, dashboardAPI) {
         this.name = name;
     }
 
-    function getData(username) {
+    function logout() {
         var request = {
             method: 'GET',
-            url: dashboardAPI + '/' + username
+            url: dashboardAPI
         };
 
-        return $http(request).then(function(response) {
-            return response;
-        });
-
-    }
+        $http(request);
+    };
 
 }
 
@@ -35334,13 +35351,25 @@ require('angular').module('crossover')
 require('./player-widget');
 require('./inventory-widget');
 require('./auction-widget');
-},{"./auction-widget":6,"./dashboard-controller.js":7,"./dashboard-factory.js":8,"./inventory-widget":10,"./player-widget":13,"./player-widget/player-controller.js":14,"angular":3}],10:[function(require,module,exports){
+
+},{"./auction-widget":6,"./dashboard-controller.js":7,"./dashboard-factory.js":8,"./inventory-widget":10,"./player-widget":14,"./player-widget/player-controller.js":15,"angular":3}],10:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('InventoryController', require('./inventory-controller.js'))
-    .directive('inventoryWidget', require('./inventory-directive.js'));
+    .directive('inventoryWidget', require('./inventory-directive.js'))
+    .directive('modal', require('./modal-directive.js'));
 
-},{"./inventory-controller.js":11,"./inventory-directive.js":12,"angular":3}],11:[function(require,module,exports){
+},{"./inventory-controller.js":11,"./inventory-directive.js":12,"./modal-directive.js":13,"angular":3}],11:[function(require,module,exports){
 function InventoryController() {
+    var ic = this;
+
+    ic.isSelected = false;
+    ic.item = {};
+
+    ic.toggleModal = function(name, qty) {
+        ic.item.name = name;
+        ic.item.qty = qty;
+        ic.isSelected = !ic.isSelected;
+    };
 
 }
 
@@ -35348,42 +35377,51 @@ module.exports = InventoryController;
 
 },{}],12:[function(require,module,exports){
 function inventoryWidget() {
+
     return {
         restrict: 'E',
+        controller: 'InventoryController',
+        controllerAs: 'inventoryCtrl',
+        bindToController: true,
+        scope: {
+            inventoryItems: '='
+        },
         templateUrl: 'src/components/dashboard/inventory-widget/inventory.html'
     };
+
 }
 
 module.exports = inventoryWidget;
-
 },{}],13:[function(require,module,exports){
+function modal() {
+    return {
+        restrict: 'E',
+        templateUrl: 'src/components/dashboard/inventory-widget/modal.html'
+    };
+}
+
+module.exports = modal;
+},{}],14:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('PlayerController', require('./player-controller.js'))
     .factory('playerFactory', require('./player-factory.js'))
     .directive('playerWidget', require('./player-directive.js'));
 
-},{"./player-controller.js":14,"./player-directive.js":15,"./player-factory.js":16,"angular":3}],14:[function(require,module,exports){
-function PlayerController() {
+},{"./player-controller.js":15,"./player-directive.js":16,"./player-factory.js":17,"angular":3}],15:[function(require,module,exports){
+function PlayerController($scope) {
     var pc = this;
 
     pc.logoutBtn = function() {
-
+        $scope.$emit('logout');
     };
 }
 
 module.exports = PlayerController;
 
-},{}],15:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 function playerWidget() {
 
-    var self = {};
-
-    self.link = function(scope, elem, attrs) {
-
-    };
-
     return {
-        link: self.link,
         restrict: 'E',
         controller: 'PlayerController',
         controllerAs: 'playerCtrl',
@@ -35396,7 +35434,7 @@ function playerWidget() {
 }
 
 module.exports = playerWidget;
-},{}],16:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 function playerFactory($http) {
     return {
 
@@ -35405,11 +35443,11 @@ function playerFactory($http) {
 
 module.exports = playerFactory;
 
-},{}],17:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('LoginController', require('./login-controller.js'));
 
-},{"./login-controller.js":18,"angular":3}],18:[function(require,module,exports){
+},{"./login-controller.js":19,"angular":3}],19:[function(require,module,exports){
 function LoginController($state, dashboardFactory, sessionFactory) {
     var lc = this;
 
@@ -35441,7 +35479,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
 
 module.exports = LoginController;
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [require('angular-ui-router')]).config(config);
 
@@ -35471,14 +35509,14 @@ require('../shared');
 require('../components/login-page');
 require('../components/dashboard');
 
-},{"../components/dashboard":9,"../components/login-page":17,"../shared":20,"angular":3,"angular-ui-router":1}],20:[function(require,module,exports){
+},{"../components/dashboard":9,"../components/login-page":18,"../shared":21,"angular":3,"angular-ui-router":1}],21:[function(require,module,exports){
 require('angular').module('crossover')
     .value('sessionAPI', '/myapplication/session')
     .value('createUserAPI', '/myapplication/createuser')
     .value('dashboardAPI', '/myapplication/dashboard')
     .factory('sessionFactory', require('./session-factory.js'));
 
-},{"./session-factory.js":21,"angular":3}],21:[function(require,module,exports){
+},{"./session-factory.js":22,"angular":3}],22:[function(require,module,exports){
 function sessionFactory($http, sessionAPI, createUserAPI) {
 
     return {
@@ -35517,4 +35555,4 @@ function sessionFactory($http, sessionAPI, createUserAPI) {
 
 module.exports = sessionFactory;
 
-},{}]},{},[19]);
+},{}]},{},[20]);

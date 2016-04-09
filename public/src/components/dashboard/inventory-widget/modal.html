@@ -1,0 +1,27 @@
+<div class="modal-bg" ng-if="inventoryCtrl.isSelected">
+    <div class="modal">
+        <div>
+            <div class="modal-header">
+                <h3>{{ inventoryCtrl.name }}</h3>
+                <i class="fa fa-close fa-2x fa-pull-right red" ng-click="inventoryCtrl.toggleModal()"></i>
+            </div>
+            <div class="modal-body">
+                <div class="form-field">
+                    <label>Quantity</label>
+                    <input type="number" ng-model="inventoryCtrl.inputQty"/>
+                    <span class="modal-message" ng-if="inventoryCtrl.inputQty > inventoryCtrl.item.qty">Cannot be greater than available quantity</span>
+                </div>
+                <div class="form-field">
+                    <label>Minimum bid value</label>
+                    <input type="number" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="align-right">
+                    <button class="primary-btn">Start auction</button>
+                    <button class="primary-btn gray-btn" ng-click="inventoryCtrl.toggleModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

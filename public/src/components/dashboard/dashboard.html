@@ -1,11 +1,13 @@
 <div class="container">
     <div class="panel">
         <player-widget
-            user-data="dashboardCtrl.userData">
+            user-data="dashboardCtrl.playerStats">
         </player-widget>
     </div>
     <div class="panel">
-        <inventory-widget></inventory-widget>
+        <inventory-widget
+            inventory-items="dashboardCtrl.playerStats.inventoryItems">
+        </inventory-widget>
     </div>
     <div class="panel">
         <auction-widget></auction-widget>

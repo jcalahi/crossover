@@ -1,9 +1,15 @@
-function DashboardController(dashboardFactory) {
+function DashboardController($scope, $state, dashboardFactory) {
     var dc = this;
-    dc.userData = dashboardFactory.getName();
+
+    dc.playerStats = {};
 
     dashboardFactory.getData(dashboardFactory.getName()).then(function(response) {
-        console.log(response);
+        dc.playerStats = response.data;
+    });
+
+    $scope.$on('logout', function() {
+        dashboardFactory.logout();
+        $state.go('login');
     });
 }
 
