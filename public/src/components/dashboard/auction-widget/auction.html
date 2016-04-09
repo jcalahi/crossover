@@ -1,10 +1,15 @@
 <div class="panel-heading">
     <h4>Current Auction</h4>
 </div>
-<div class="panel-body">
-    <p class="label">Seller: <span class="value strong">The Seller Name</span></p>
-    <p class="label">Time left: <span class="lowercase strong">90 seconds</span></p>
-    <p class="label">Winning bid: <span class="value strong">108</span></p>
-    <input type="number" class="block spacer" min="1" max="500" />
-    <button class="primary-btn green-btn block"><i class="fa fa-money fa-lg white icon-spacing"></i>Place Bid</button>
+<div class="panel-body" ng-if="auctionCtrl.auctionStarted">
+    <p class="label">Seller: <span class="value strong">{{ auctionCtrl.sellerName }}</span></p>
+    <p class="label">Time left: <span class="lowercase strong">{{ auctionCtrl.timeLeft }} seconds</span></p>
+    <p class="label">Winning bid: <span class="value strong">{{ auctionCtrl.item.value }}</span></p>
+    <p class="label">Your Bid: <input type="number" class="block spacer" min="1" max="500" ng-model="auctionCtrl.placeBidValue"/></p>
+    <span class="modal-message" ng-if="auctionCtrl.placeBidValue < auctionCtrl.item.value">Cannot be less than winning bid</span>
+    <button class="primary-btn green-btn block" ng-click="auctionCtrl.placeBid(auctionCtrl.item)"><i class="fa fa-money fa-lg white icon-spacing"></i>Place Bid</button>
+    <span class="modal-message" ng-if="auctionCtrl.placeBidValue === null || auctionCtrl.placeBidValue === undefined">Bid amount is empty</span>
+</div>
+<div class="panel-body" ng-if="!auctionCtrl.auctionStarted">
+    No auction at the moment
 </div>

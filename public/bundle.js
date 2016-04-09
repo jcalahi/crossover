@@ -35258,22 +35258,68 @@ require('./angular');
 module.exports = angular;
 
 },{"./angular":2}],4:[function(require,module,exports){
-function AuctionController() {
+function AuctionController($scope, $interval) {
+    var ac = this;
 
+    ac.timeLeft = 5;
+
+    var promise = null;
+
+    var unbind = $scope.$on('roll it', function() {
+
+        promise = $interval(function() {
+            ac.timeLeft -= 1;
+            if (ac.timeLeft === 0) {
+                stop();
+                $scope.$emit('auction closed', ac.item);
+            }
+        }, 1000);
+
+    });
+
+    // Clear events
+    $scope.$on('$destoy', function() {
+        stop();
+        unbind();
+    });
+
+    ac.placeBid = function(item) {
+
+        if (ac.placeBidValue === null || ac.placeBidValue === undefined || ac.timeLeft === 0) {
+            return;
+        }
+
+        if (ac.timeLeft <= 10 && ac.timeLeft !== 0) {
+            ac.timeLeft = 10;
+        }
+
+        ac.item.value = ac.placeBidValue;
+        console.log(item);
+    };
+
+    function stop() {
+        $interval.cancel(promise);
+    }
 }
 
 module.exports = AuctionController;
-
 },{}],5:[function(require,module,exports){
 function auctionWidget() {
     return {
         restrict: 'E',
+        controller: 'AuctionController',
+        controllerAs: 'auctionCtrl',
+        bindToController: true,
+        scope: {
+            sellerName: '=',
+            auctionStarted: '=',
+            item: '='
+        },
         templateUrl: 'src/components/dashboard/auction-widget/auction.html'
     };
 }
 
 module.exports = auctionWidget;
-
 },{}],6:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('AuctionController', require('./auction-controller.js'))
@@ -35284,14 +35330,32 @@ function DashboardController($scope, $state, dashboardFactory) {
     var dc = this;
 
     dc.playerStats = {};
+    dc.itemForAuction = {};
+    dc.auctionStarted = false;
 
-    dashboardFactory.getData(dashboardFactory.getName()).then(function(response) {
+    dashboardFactory.getData(dashboardFactory.getName()).then(function (response) {
         dc.playerStats = response.data;
     });
 
-    $scope.$on('logout', function() {
+    var unbindLogout = $scope.$on('logout', function () {
         dashboardFactory.logout();
         $state.go('login');
+    });
+
+    var unbindStart = $scope.$on('startAuction', function (evt, data) {
+        dc.auctionStarted = true;
+        dc.itemForAuction = data;
+        $scope.$broadcast('roll it');
+    });
+
+    var unbindClose = $scope.$on('auction closed', function(evt, data) {
+        dashboardFactory.processBid(data);
+    });
+
+    // Clear events
+    $scope.$on('$destroy', function() {
+        unbindLogout();
+        unbindStart();
     });
 }
 
@@ -35306,7 +35370,8 @@ function dashboardFactory($http, dashboardAPI) {
         getData: getData,
         getName: getName,
         setName: setName,
-        logout: logout
+        logout: logout,
+        processBid: processBid
     };
 
     function getData(username) {
@@ -35337,11 +35402,22 @@ function dashboardFactory($http, dashboardAPI) {
         };
 
         $http(request);
-    };
+    }
+
+    function processBid(item) {
+        var req = {
+            method: 'PUT',
+            url: dashboardAPI + '/' + 'julius',
+            data: item
+        };
+
+        $http(req);
+    }
 
 }
 
 module.exports = dashboardFactory;
+
 },{}],9:[function(require,module,exports){
 require('angular').module('crossover')
 	.controller('DashboardController', require('./dashboard-controller.js'))
@@ -35359,16 +35435,29 @@ require('angular').module('crossover')
     .directive('modal', require('./modal-directive.js'));
 
 },{"./inventory-controller.js":11,"./inventory-directive.js":12,"./modal-directive.js":13,"angular":3}],11:[function(require,module,exports){
-function InventoryController() {
+function InventoryController($scope) {
     var ic = this;
 
-    ic.isSelected = false;
+    // holds bidding values
     ic.item = {};
+    ic.bid = {};
+
+    ic.auctionInProgress = false;
+    ic.isSelected = false;
 
     ic.toggleModal = function(name, qty) {
         ic.item.name = name;
         ic.item.qty = qty;
         ic.isSelected = !ic.isSelected;
+        // reset input fields
+        ic.bid = {};
+    };
+
+    ic.startAuction = function(bid) {
+        bid.itemName = ic.item.name;
+        $scope.$emit('startAuction', bid);
+        // close modal
+        ic.isSelected = false;
     };
 
 }
@@ -35392,6 +35481,7 @@ function inventoryWidget() {
 }
 
 module.exports = inventoryWidget;
+
 },{}],13:[function(require,module,exports){
 function modal() {
     return {
@@ -35401,13 +35491,13 @@ function modal() {
 }
 
 module.exports = modal;
+
 },{}],14:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('PlayerController', require('./player-controller.js'))
-    .factory('playerFactory', require('./player-factory.js'))
     .directive('playerWidget', require('./player-directive.js'));
 
-},{"./player-controller.js":15,"./player-directive.js":16,"./player-factory.js":17,"angular":3}],15:[function(require,module,exports){
+},{"./player-controller.js":15,"./player-directive.js":16,"angular":3}],15:[function(require,module,exports){
 function PlayerController($scope) {
     var pc = this;
 
@@ -35434,20 +35524,12 @@ function playerWidget() {
 }
 
 module.exports = playerWidget;
+
 },{}],17:[function(require,module,exports){
-function playerFactory($http) {
-    return {
-
-    };
-}
-
-module.exports = playerFactory;
-
-},{}],18:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('LoginController', require('./login-controller.js'));
 
-},{"./login-controller.js":19,"angular":3}],19:[function(require,module,exports){
+},{"./login-controller.js":18,"angular":3}],18:[function(require,module,exports){
 function LoginController($state, dashboardFactory, sessionFactory) {
     var lc = this;
 
@@ -35479,7 +35561,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
 
 module.exports = LoginController;
 
-},{}],20:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [require('angular-ui-router')]).config(config);
 
@@ -35509,14 +35591,14 @@ require('../shared');
 require('../components/login-page');
 require('../components/dashboard');
 
-},{"../components/dashboard":9,"../components/login-page":18,"../shared":21,"angular":3,"angular-ui-router":1}],21:[function(require,module,exports){
+},{"../components/dashboard":9,"../components/login-page":17,"../shared":20,"angular":3,"angular-ui-router":1}],20:[function(require,module,exports){
 require('angular').module('crossover')
     .value('sessionAPI', '/myapplication/session')
     .value('createUserAPI', '/myapplication/createuser')
     .value('dashboardAPI', '/myapplication/dashboard')
     .factory('sessionFactory', require('./session-factory.js'));
 
-},{"./session-factory.js":22,"angular":3}],22:[function(require,module,exports){
+},{"./session-factory.js":21,"angular":3}],21:[function(require,module,exports){
 function sessionFactory($http, sessionAPI, createUserAPI) {
 
     return {
@@ -35555,4 +35637,4 @@ function sessionFactory($http, sessionAPI, createUserAPI) {
 
 module.exports = sessionFactory;
 
-},{}]},{},[20]);
+},{}]},{},[19]);

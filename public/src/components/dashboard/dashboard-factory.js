@@ -6,7 +6,8 @@ function dashboardFactory($http, dashboardAPI) {
         getData: getData,
         getName: getName,
         setName: setName,
-        logout: logout
+        logout: logout,
+        processBid: processBid
     };
 
     function getData(username) {
@@ -37,7 +38,17 @@ function dashboardFactory($http, dashboardAPI) {
         };
 
         $http(request);
-    };
+    }
+
+    function processBid(item) {
+        var req = {
+            method: 'PUT',
+            url: dashboardAPI + '/' + 'julius',
+            data: item
+        };
+
+        $http(req);
+    }
 
 }
 

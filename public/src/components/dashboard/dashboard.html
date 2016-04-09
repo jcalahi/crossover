@@ -6,10 +6,15 @@
     </div>
     <div class="panel">
         <inventory-widget
-            inventory-items="dashboardCtrl.playerStats.inventoryItems">
+            inventory-items="dashboardCtrl.playerStats.inventoryItems"
+            item-status="">
         </inventory-widget>
     </div>
     <div class="panel">
-        <auction-widget></auction-widget>
+        <auction-widget
+            seller-name="dashboardCtrl.playerStats.name"
+            item="dashboardCtrl.itemForAuction"
+            auction-started="dashboardCtrl.auctionStarted">
+        </auction-widget>
     </div>
 </div>
