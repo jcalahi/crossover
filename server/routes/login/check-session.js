@@ -1,3 +1,6 @@
+/**
+ * Router middleware that redirects existing player to dashboard. Otherwise, he/she needs to register.
+ */
 var express = require('express');
 var router = express.Router();
 var bodyParser = require('body-parser');

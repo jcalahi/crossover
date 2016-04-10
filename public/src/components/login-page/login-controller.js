@@ -4,6 +4,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
     lc.userName = '';
     lc.inValid = false;
 
+    // Called on page load
     lc.init = function() {
         sessionFactory.get().then(function(response) {
             if (response.data.username) {
@@ -12,7 +13,10 @@ function LoginController($state, dashboardFactory, sessionFactory) {
             }
         });
     };
-
+    /**
+     * @desc function that catches the username to create a new player
+     * @param {String} username - Player name
+     */
     lc.loginBtn = function(username) {
         if (username === undefined || username.length <= 3) {
             lc.inValid = true;
@@ -20,7 +24,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
             lc.inValid = false;
             sessionFactory.create(username);
             dashboardFactory.setName(username);
-            $state.go('dashboard');
+            $state.go('dashboard', { username: username });
         }
     };
 

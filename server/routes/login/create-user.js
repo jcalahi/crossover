@@ -1,3 +1,6 @@
+/**
+ * Router middleware that creates new player
+ */
 var router = require('express').Router();
 var bodyParser = require('body-parser');
 var connection = require('../../database/dbconfig');
@@ -22,7 +25,7 @@ router.use('/createuser', function(req, res, next) {
             console.log('user exists');
         } else {
 
-            connection.query(query.insertUser, [req.body.username, 1000, 30, 18, 1], function(err, result) {
+            connection.query(query.insertUser, [req.body.username, 1000, 30, 18, 1], function(err) {
                 if (err) throw err;
                 console.log(req.body.username, 'added to DB');
             });

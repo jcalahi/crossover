@@ -11,9 +11,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             templateUrl: 'src/components/login-page/login.html'
         })
         .state('dashboard', {
-            url: '/dashboard',
+            url: '/dashboard/{username}',
             controller: 'DashboardController',
             controllerAs: 'dashboardCtrl',
+            params: {
+                username: ''
+            },
             templateUrl: 'src/components/dashboard/dashboard.html'
         });
 
@@ -22,7 +25,7 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
 
 // shared
 require('../shared');
-
 // login-page
 require('../components/login-page');
+// dashboard
 require('../components/dashboard');

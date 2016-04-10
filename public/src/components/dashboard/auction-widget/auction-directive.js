@@ -1,4 +1,5 @@
 function auctionWidget() {
+
     return {
         restrict: 'E',
         controller: 'AuctionController',

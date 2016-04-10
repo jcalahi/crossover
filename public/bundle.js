@@ -35258,23 +35258,27 @@ require('./angular');
 module.exports = angular;
 
 },{"./angular":2}],4:[function(require,module,exports){
-function AuctionController($scope, $interval) {
+function AuctionController($scope, $stateParams, $state, $interval) {
     var ac = this;
 
-    ac.timeLeft = 5;
+    ac.timeLeft = 90;
 
     var promise = null;
+    var hasBidding = false;
 
     var unbind = $scope.$on('roll it', function() {
-
         promise = $interval(function() {
             ac.timeLeft -= 1;
+
             if (ac.timeLeft === 0) {
+                if (hasBidding) {
+                    $scope.$emit('auction closed', ac.item);
+                }
+                ac.timeLeft = 5;
+                ac.auctionStarted = false;
                 stop();
-                $scope.$emit('auction closed', ac.item);
             }
         }, 1000);
-
     });
 
     // Clear events
@@ -35282,29 +35286,33 @@ function AuctionController($scope, $interval) {
         stop();
         unbind();
     });
-
+    /**
+     * @desc function that places new bid value in the ongoing item for auction
+     * @param {Object} item - contains item name, minimum bid value, and quantity
+     */
     ac.placeBid = function(item) {
-
-        if (ac.placeBidValue === null || ac.placeBidValue === undefined || ac.timeLeft === 0) {
+        hasBidding = true;
+        if (ac.placeBidValue === null || ac.placeBidValue === undefined || ac.placeBidValue === ac.item.value || ac.timeLeft === 0) {
             return;
         }
-
         if (ac.timeLeft <= 10 && ac.timeLeft !== 0) {
             ac.timeLeft = 10;
         }
-
         ac.item.value = ac.placeBidValue;
-        console.log(item);
+        item.sellerName = ac.sellerName;
     };
 
+    // Cancel $interval
     function stop() {
         $interval.cancel(promise);
     }
 }
 
 module.exports = AuctionController;
+
 },{}],5:[function(require,module,exports){
 function auctionWidget() {
+
     return {
         restrict: 'E',
         controller: 'AuctionController',
@@ -35320,51 +35328,77 @@ function auctionWidget() {
 }
 
 module.exports = auctionWidget;
+
 },{}],6:[function(require,module,exports){
 require('angular').module('crossover')
     .controller('AuctionController', require('./auction-controller.js'))
     .directive('auctionWidget', require('./auction-directive.js'));
 
 },{"./auction-controller.js":4,"./auction-directive.js":5,"angular":3}],7:[function(require,module,exports){
-function DashboardController($scope, $state, dashboardFactory) {
+function DashboardController($scope, $state, $stateParams, dashboardFactory) {
     var dc = this;
 
     dc.playerStats = {};
     dc.itemForAuction = {};
     dc.auctionStarted = false;
 
-    dashboardFactory.getData(dashboardFactory.getName()).then(function (response) {
+    // Called on page load to retrieve player data
+    dashboardFactory.getData(dashboardFactory.getName()).then(function(response) {
         dc.playerStats = response.data;
     });
 
-    var unbindLogout = $scope.$on('logout', function () {
-        dashboardFactory.logout();
-        $state.go('login');
+    var unbindLogout = $scope.$on('logout', function() {
+        dashboardFactory.logout().then(function(response) {
+            if (response.status === 200) {
+                $state.go('login');
+            }
+        });
     });
 
-    var unbindStart = $scope.$on('startAuction', function (evt, data) {
+    var unbindStart = $scope.$on('startAuction', function(evt, data) {
         dc.auctionStarted = true;
         dc.itemForAuction = data;
         $scope.$broadcast('roll it');
     });
 
     var unbindClose = $scope.$on('auction closed', function(evt, data) {
-        dashboardFactory.processBid(data);
+        updateData(dc.playerStats, data);
+
+        dashboardFactory.processBid(data).then(function(response) {
+            if (response.data === 200) {
+                dashboardFactory.getData(dashboardFactory.getName()).then(function(res) {
+                    dc.playerStats = res.data;
+                });
+            }
+
+        });
     });
 
     // Clear events
     $scope.$on('$destroy', function() {
         unbindLogout();
         unbindStart();
+        unbindClose();
     });
+    /**
+     * @desc function that updates player dashboard in real-time
+     * @param {Object} playerData - logged in player's data
+     * @param {Object} newData - contains player's recent transaction
+     */
+    function updateData(playerData, newData) {
+        playerData.coins = playerData.coins - newData.value;
+
+        angular.forEach(playerData.inventoryItems, function(item) {
+            if (item.name === newData.itemName) {
+                item.quantity = item.quantity - newData.qty;
+            }
+        });
+    }
 }
 
 module.exports = DashboardController;
-
 },{}],8:[function(require,module,exports){
 function dashboardFactory($http, dashboardAPI) {
-
-    var name = null;
 
     return {
         getData: getData,
@@ -35373,18 +35407,19 @@ function dashboardFactory($http, dashboardAPI) {
         logout: logout,
         processBid: processBid
     };
-
+    /**
+     * @desc GET call to retrieve data from database
+     * @param {String} username - Player name
+     */
     function getData(username) {
         var request = {
                 method: 'GET',
                 url: dashboardAPI + '/' + username
-            },
-            playerStats = {};
+            };
 
         return $http(request).then(function(response) {
             return response;
         });
-
     }
 
     function getName() {
@@ -35401,17 +35436,24 @@ function dashboardFactory($http, dashboardAPI) {
             url: dashboardAPI
         };
 
-        $http(request);
+        return $http(request).then(function(response) {
+            return response;
+        });
     }
-
+    /**
+     * @desc PUT call to update player's data in database.
+     * @param {Object} item - contains transaction data
+     */
     function processBid(item) {
         var req = {
             method: 'PUT',
-            url: dashboardAPI + '/' + 'julius',
+            url: dashboardAPI + '/' + item.sellerName,
             data: item
         };
 
-        $http(req);
+        return $http(req).then(function(response) {
+            return response;
+        });
     }
 
 }
@@ -35444,7 +35486,11 @@ function InventoryController($scope) {
 
     ic.auctionInProgress = false;
     ic.isSelected = false;
-
+    /**
+     * @desc function that displays a modal to perform auction/bidding
+     * @param {String} name - selected item's name
+     * @param {Integer} qty - selected item's quantity
+     */
     ic.toggleModal = function(name, qty) {
         ic.item.name = name;
         ic.item.qty = qty;
@@ -35452,7 +35498,10 @@ function InventoryController($scope) {
         // reset input fields
         ic.bid = {};
     };
-
+    /**
+     * @desc function starts auction/bidding process
+     * @param {Object} bid - contains item in auction, quantity and bid value
+     */
     ic.startAuction = function(bid) {
         bid.itemName = ic.item.name;
         $scope.$emit('startAuction', bid);
@@ -35536,6 +35585,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
     lc.userName = '';
     lc.inValid = false;
 
+    // Called on page load
     lc.init = function() {
         sessionFactory.get().then(function(response) {
             if (response.data.username) {
@@ -35544,7 +35594,10 @@ function LoginController($state, dashboardFactory, sessionFactory) {
             }
         });
     };
-
+    /**
+     * @desc function that catches the username to create a new player
+     * @param {String} username - Player name
+     */
     lc.loginBtn = function(username) {
         if (username === undefined || username.length <= 3) {
             lc.inValid = true;
@@ -35552,7 +35605,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
             lc.inValid = false;
             sessionFactory.create(username);
             dashboardFactory.setName(username);
-            $state.go('dashboard');
+            $state.go('dashboard', { username: username });
         }
     };
 
@@ -35560,7 +35613,6 @@ function LoginController($state, dashboardFactory, sessionFactory) {
 }
 
 module.exports = LoginController;
-
 },{}],19:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [require('angular-ui-router')]).config(config);
@@ -35575,9 +35627,12 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
             templateUrl: 'src/components/login-page/login.html'
         })
         .state('dashboard', {
-            url: '/dashboard',
+            url: '/dashboard/{username}',
             controller: 'DashboardController',
             controllerAs: 'dashboardCtrl',
+            params: {
+                username: ''
+            },
             templateUrl: 'src/components/dashboard/dashboard.html'
         });
 
@@ -35586,9 +35641,9 @@ function config($stateProvider, $urlRouterProvider, $locationProvider) {
 
 // shared
 require('../shared');
-
 // login-page
 require('../components/login-page');
+// dashboard
 require('../components/dashboard');
 
 },{"../components/dashboard":9,"../components/login-page":17,"../shared":20,"angular":3,"angular-ui-router":1}],20:[function(require,module,exports){

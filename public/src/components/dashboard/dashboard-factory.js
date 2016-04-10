@@ -1,7 +1,5 @@
 function dashboardFactory($http, dashboardAPI) {
 
-    var name = null;
-
     return {
         getData: getData,
         getName: getName,
@@ -9,18 +7,19 @@ function dashboardFactory($http, dashboardAPI) {
         logout: logout,
         processBid: processBid
     };
-
+    /**
+     * @desc GET call to retrieve data from database
+     * @param {String} username - Player name
+     */
     function getData(username) {
         var request = {
                 method: 'GET',
                 url: dashboardAPI + '/' + username
-            },
-            playerStats = {};
+            };
 
         return $http(request).then(function(response) {
             return response;
         });
-
     }
 
     function getName() {
@@ -37,17 +36,24 @@ function dashboardFactory($http, dashboardAPI) {
             url: dashboardAPI
         };
 
-        $http(request);
+        return $http(request).then(function(response) {
+            return response;
+        });
     }
-
+    /**
+     * @desc PUT call to update player's data in database.
+     * @param {Object} item - contains transaction data
+     */
     function processBid(item) {
         var req = {
             method: 'PUT',
-            url: dashboardAPI + '/' + 'julius',
+            url: dashboardAPI + '/' + item.sellerName,
             data: item
         };
 
-        $http(req);
+        return $http(req).then(function(response) {
+            return response;
+        });
     }
 
 }

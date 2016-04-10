@@ -1,32 +1,47 @@
+/**
+ * Router middleware that updates player data in MySQL database.
+ */
 var router = require('express').Router();
 var bodyParser = require('body-parser');
 var connection = require('../../database/dbconfig');
-var query = require('../../database/query-strings');
 
 router.use(bodyParser.json());
-router.use(bodyParser.urlencoded({
-    extended: false
-}));
+router.use(bodyParser.urlencoded({ extended: false }));
 
 router.put('/dashboard/:username', function(req, res) {
-    connection.query('UPDATE users SET ? WHERE name=?', [{ Breads: Breads - req.body.qty }, req.params.username], function(err, result) {
-        console.log(result);
-        res.end();
-    });
+
+    switch (req.body.itemName) {
+        case 'Breads':
+            connection.query('UPDATE users SET breads = breads - ? WHERE name=?', [req.body.qty, req.params.username], function(err, result) {
+                if (err) throw err;
+                connection.query('UPDATE users SET coins = coins - ? WHERE name=?', [req.body.value, req.params.username], function(err, result) {
+                    if (err) throw err;
+                });
+            });
+            res.status(200).end();
+            break;
+
+        case 'Carrots':
+            connection.query('UPDATE users SET carrots = carrots - ? WHERE name=?', [req.body.qty, req.params.username], function(err, result) {
+                if (err) throw err;
+                connection.query('UPDATE users SET coins = coins - ? WHERE name=?', [req.body.value, req.params.username], function(err, result) {
+                    if (err) throw err;
+                });
+            });
+            res.status(200).end();
+            break;
+        case 'Diamonds':
+            connection.query('UPDATE users SET diamonds = diamonds - ? WHERE name=?', [req.body.qty, req.params.username], function(err, result) {
+                if (err) throw err;
+                connection.query('UPDATE users SET coins = coins - ? WHERE name=?', [req.body.value, req.params.username], function(err, result) {
+                    if (err) throw err;
+                });
+            });
+            res.status(200).end();
+            break;
+        default:
+            break;
+    }
 });
 
 module.exports = router;
-/*
-
-UPDATE Customers
-SET ContactName='Alfred Schmidt', City='Hamburg'
-WHERE CustomerName='Alfreds Futterkiste';
-
-connection.query('UPDATE users SET ? WHERE UserID = :UserID',
-                     {UserID: userId, Name: name})*/
-
-/*connection.query('UPDATE user SET ? WHERE ?', [{
-    Name: name
-}, {
-    UserId: userId
-}])*/
