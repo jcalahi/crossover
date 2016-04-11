@@ -14,7 +14,7 @@ function AuctionController($scope, $stateParams, $state, $interval) {
                 if (hasBidding) {
                     $scope.$emit('auction closed', ac.item);
                 }
-                ac.timeLeft = 5;
+                ac.timeLeft = 90;
                 ac.auctionStarted = false;
                 stop();
             }
