@@ -4,6 +4,8 @@ function LoginController($state, dashboardFactory, sessionFactory) {
     lc.userName = '';
     lc.inValid = false;
 
+    var name = 'julius';
+
     // Called on page load
     lc.init = function() {
         sessionFactory.get().then(function(response) {

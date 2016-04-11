@@ -1,5 +1,5 @@
 'use strict'; // jshint ignore:line
-require('angular').module('crossover', [require('angular-ui-router')]).config(config);
+require('angular').module('crossover', [require('angular-ui-router'), require('angular-mocks')]).config(config);
 
 function config($stateProvider, $urlRouterProvider, $locationProvider) {
 
