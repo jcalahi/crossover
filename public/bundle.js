@@ -35397,6 +35397,7 @@ function DashboardController($scope, $state, $stateParams, dashboardFactory) {
 }
 
 module.exports = DashboardController;
+
 },{}],8:[function(require,module,exports){
 function dashboardFactory($http, dashboardAPI) {
 
@@ -35613,6 +35614,7 @@ function LoginController($state, dashboardFactory, sessionFactory) {
 }
 
 module.exports = LoginController;
+
 },{}],19:[function(require,module,exports){
 'use strict'; // jshint ignore:line
 require('angular').module('crossover', [require('angular-ui-router')]).config(config);

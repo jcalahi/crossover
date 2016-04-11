@@ -9,12 +9,12 @@ Please follow the steps below to run this application:
 1. Download MySQL Workbench.
 2. Go to C:\Program Files\MySQL\MySQL Workbench 6.3 CE via command prompt then type 'mysql -h 127.0.0.1 -u root -p'. Leave password blank. 
 3. In MySQL command line, type CREATE database crossover;
-3. Install XAMPP then START MySQL service. Default port is 3306.
-4. Install Node v5.x using -g in cli.
-5. Once installed, create a folder then extract the codes from the zip file.
-6. For Windows, go to the newly created folder's root directory then type "npm install" to download the dependencies via command prompt.
-7. Go to project root folder, then type "node app.js" to run the node server.
-8. Once the server is running, open your browser then enter 'http://localhost:3030/myapplication/' to launch the application.
+4. Install XAMPP then START MySQL service. Default port is 3306.
+5. Install Node v5.x using -g in cli.
+6. Once installed, create a folder then extract the codes from the zip file.
+7. For Windows, go to the newly created folder's root directory then type "npm install" to download the dependencies via command prompt.
+8. Go to project root folder, then type "node app.js" to run the node server.
+9. Once the server is running, open your browser then enter 'http://localhost:3030/myapplication/' to launch the application.
 
 Optional:
 
