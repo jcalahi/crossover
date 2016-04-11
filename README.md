@@ -7,7 +7,8 @@ Players may join by simply registering with their desired username.
 Please follow the steps below to run this application:
 
 1. Download MySQL Workbench.
-2. Go to C:\Program Files\MySQL\MySQL Workbench 6.3 CE via command prompt then type 'mysql -h 127.0.0.1 -u root -p'. 
+2. Go to C:\Program Files\MySQL\MySQL Workbench 6.3 CE via command prompt then type 'mysql -h 127.0.0.1 -u root -p'. Leave password blank. 
+3. In MySQL command line, type CREATE database crossover;
 3. Install XAMPP then START MySQL service. Default port is 3306.
 4. Install Node v5.x using -g in cli.
 5. Once installed, create a folder then extract the codes from the zip file.
